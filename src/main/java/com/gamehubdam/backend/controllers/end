@@ -1,0 +1,7 @@
+lista de jugadores
+lista de rankings
+lista de partidas
+
+GET jugadores
+GET rankings
+GET partidas
