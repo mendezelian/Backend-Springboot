@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import com.gamehubdam.backend.mappers.JugadorMapper;
 import jakarta.persistence.EntityNotFoundException;
-
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -17,15 +17,20 @@ public class JugadorService{
 	private final JugadorMapper jugadorMapper;
 
 	public JugadorResponseDto crearJugador(JugadorRequestDto jugadorRequestDto){
-		Jugador jugador = this.jugadorMapper(jugadorRequestDto);
+		Jugador jugador = this.jugadorMapper.toEntity(jugadorRequestDto);
 		jugador.setNombre(jugador.getNombre().trim().toUpperCase());
 		jugador.setEmail(jugador.getEmail().trim().toLowerCase());
 		
-		if(!this.jugadorRepository.existsByEmail(jugador.getEmail())){
+		if(this.jugadorRepository.existsByEmail(jugador.getEmail())){
 			throw new IllegalStateException("El jugador con email"+ jugador.getEmail() + "ya existe");
 		}
 
-		JugadorSaved jugadorSaved = this.jugadorRepository.save(jugador);
+		Jugador jugadorSaved = this.jugadorRepository.save(jugador);
 		return this.jugadorMapper.toResponse(jugadorSaved);
+	}
+
+	public List<JugadorResponseDto> consultarJugadores(){
+		List<Jugador> jugadores = this.jugadorRepository.findAll();
+		return this.jugadorMapper.toListResponse(jugadores);
 	}
 }

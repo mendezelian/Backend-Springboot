@@ -31,3 +31,17 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### VIM ###
+*.swp
+*.swo
+*.swm
+*.swn
+*.swl
+*.bak
+*.tmp
+.vim/undo
+.vim/swap/
+.vim/backup/
+*.sw?
+.nvimlog
