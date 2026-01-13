@@ -1,16 +1,13 @@
 package com.gamehubdam.backend.dtos;
 
-import lombok.Getter;
 import lombok.AllArgsConstructor;
-import java.time.LocalDate;
+import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public class PartidaResponseDto{
-	private Long partidaId;
+public class RankingResponseDto {
 	private Long jugadorId;
+	private int puesto;
 	private String nombre;
 	private int score;
-	private LocalDate fecha;
-	private int duracion;
 }

@@ -33,4 +33,12 @@ public class JugadorService{
 		List<Jugador> jugadores = this.jugadorRepository.findAll();
 		return this.jugadorMapper.toListResponse(jugadores);
 	}
+
+
+	public Jugador getJugadorEntity(Long id){
+		
+		Jugador jugador = this.jugadorRepository.findById(id)
+			.orElseThrow(() -> new EntityNotFoundException("El jugador no existe."));
+		return jugador;		
+	}
 }
