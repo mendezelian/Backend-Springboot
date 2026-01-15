@@ -15,15 +15,16 @@ import com.gamehubdam.backend.entities.Jugador;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.transaction.annotation.Transactional;
 
-@RequiredArgsConstructor
+@RequiredArgsConstructor // Obliga a spring a inyectar mediante el constructor, alternativa a autowired
 @Service
 public class PartidaService{
 	private final PartidaRepository partidaRepository;
 	private final PartidaMapper partidaMapper;
 	private final JugadorService jugadorService;
 	private final JugadorPartidaRepository jugadorPartidaRepository;
-
-	@Transactional
+	
+	//crear partida
+	@Transactional //si falla algo que revierta los cambios
 	public PartidaResponseDto crearPartida(PartidaRequestDto partidaRequestDto){
 		// Consulta el jugador
 		Jugador jugador = this.jugadorService.getJugadorEntity(partidaRequestDto.getJugadorId());
@@ -48,7 +49,8 @@ public class PartidaService{
 
 		return this.partidaMapper.toResponse(jugadorPartidaSaved);
 	}
-
+	
+	// listar partidas
 	public List<PartidaResponseDto> listarPartidas(){
 		List<JugadorPartida> jugadoresPartidas = this.jugadorPartidaRepository.findAll();
 		

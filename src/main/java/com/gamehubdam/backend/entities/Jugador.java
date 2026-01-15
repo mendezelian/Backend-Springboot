@@ -11,18 +11,18 @@ import lombok.Setter;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 
-@AllArgsConstructor
-@NoArgsConstructor
-@Getter
-@Setter
-@Entity
-@Table(name = "jugadores")
+@AllArgsConstructor // Constructor con todas las propiedades
+@NoArgsConstructor // Constructor vacío
+@Getter // Métodos Getters para todas las propiedades
+@Setter // Métodos Setters para todas las propiedades
+@Entity // Define a esta clase como una entidad persistente
+@Table(name = "jugadores") // Crea la tabla en la base de datos
 public class Jugador{
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	@Id // Define el identificador
+	@GeneratedValue(strategy = GenerationType.IDENTITY) // Permite que elija el tipo de numeración de los Ids
+	private Long id; 
 
-	@Column(nullable = false)
+	@Column(nullable = false) // Define una columna en la base de datos no nula
 	private String nombre;
 
 	@Column(nullable = false)
