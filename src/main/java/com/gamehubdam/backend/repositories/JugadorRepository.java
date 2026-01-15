@@ -2,11 +2,15 @@ package com.gamehubdam.backend.repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import com.gamehubdam.backend.entities.Jugador;
+import java.util.Optional;
 
 // interfaz que implementa JpaRepository para que spring genere automaticamente las implementaciones de los métodos predefinidos
 // en Jpa
 public interface JugadorRepository extends JpaRepository<Jugador, Long>{
-	// método personalizado, verifica la existencia de un usuario mediante su email
-	boolean existsByEmail(String email);
+	// método personalizado, búsca a un jugador por su email
+    Optional<Jugador> findByEmail(String email);
+
+    // método personalizado, verifica la existencia de un usuario mediante su email
+    boolean existsByEmail(String email);
 }
 
