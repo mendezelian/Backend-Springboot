@@ -15,6 +15,7 @@ import lombok.NoArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 @AllArgsConstructor // Constructor con todas las propiedades
 @NoArgsConstructor // Constructor vacío
@@ -32,6 +33,6 @@ public class Partida{
 	private LocalDate fecha;
 	
 	@Column(nullable = false)
-	private int duracion;
+	private LocalTime duracion;
 }
 

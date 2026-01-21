@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.NoArgsConstructor;
+import java.time.LocalTime;
 
 @AllArgsConstructor // Constructor con todas las propiedades
 @NoArgsConstructor // Constructor vacío
@@ -18,5 +19,5 @@ public class PartidaRequestDto{
 	private int score;
 
 	@NotNull(message = "La duración de la partida es obligatoria.")
-	private int duracion;
+	private LocalTime duracion;
 }

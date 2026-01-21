@@ -3,6 +3,7 @@ package com.gamehubdam.backend.dtos;
 import lombok.Getter;
 import lombok.AllArgsConstructor;
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 // Dto de respuesta al cliente, inmutable solo se puede consulat y crear mediante el constructor
 
@@ -14,5 +15,5 @@ public class PartidaResponseDto{
 	private String nombre;
 	private int score;
 	private LocalDate fecha;
-	private int duracion;
+	private LocalTime duracion;
 }
