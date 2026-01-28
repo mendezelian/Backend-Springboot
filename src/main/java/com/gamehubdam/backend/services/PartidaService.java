@@ -1,5 +1,6 @@
 package com.gamehubdam.backend.services;
 
+
 import lombok.RequiredArgsConstructor;
 import com.gamehubdam.backend.dtos.PartidaRequestDto;
 import com.gamehubdam.backend.dtos.PartidaResponseDto;
@@ -8,13 +9,15 @@ import com.gamehubdam.backend.entities.Partida;
 import com.gamehubdam.backend.mappers.PartidaMapper;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.ArrayList;
 import com.gamehubdam.backend.services.JugadorService;
 import com.gamehubdam.backend.repositories.JugadorPartidaRepository;
 import com.gamehubdam.backend.entities.JugadorPartida;
 import com.gamehubdam.backend.entities.Jugador;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.transaction.annotation.Transactional;
-
+import com.gamehubdam.backend.dtos.JugadorScoreRequestDto;
+import com.gamehubdam.backend.dtos.JugadorRequestDto;
 @RequiredArgsConstructor // Obliga a spring a inyectar mediante el constructor, alternativa a autowired
 @Service
 public class PartidaService{
@@ -26,34 +29,48 @@ public class PartidaService{
 	//crear partida
 	@Transactional //si falla algo que revierta los cambios
 	public PartidaResponseDto crearPartida(PartidaRequestDto partidaRequestDto){
-		// Consulta el jugador
-		Jugador jugador = this.jugadorService.getJugadorEntity(partidaRequestDto.getJugadorId());
-			
-		//Mapea el request para crear la entidad Partida
+		
+        //Mapea el request para crear la entidad Partida
 		Partida partida = this.partidaMapper.toPartidaEntity(partidaRequestDto);
 		
-		//Mapea el request para crear la entidad JugadorPartida
-		JugadorPartida jugadorPartida = this.partidaMapper.toJugadorPartidaEntity(partidaRequestDto);
-		
-		//Guarda la partida en la base de datos
+        //Guarda la partida en la base de datos
 		Partida partidaSaved = this.partidaRepository.save(partida);
-		
-		//Modifica partida con la Partida guardada
-		jugadorPartida.setPartida(partidaSaved);
-		
-		//Modifica jugador con el Jugador consultado
-		jugadorPartida.setJugador(jugador);
-		
-		//Guarda la relación de jugador con partida en la base de datos 
-		JugadorPartida jugadorPartidaSaved = this.jugadorPartidaRepository.save(jugadorPartida);
+		    
+        //Se inicializa para ocuparla dentro del for
+        List<JugadorPartida> jugadoresPartida = new ArrayList<>();
 
-		return this.partidaMapper.toResponse(jugadorPartidaSaved);
+        // Consulta los jugadores
+        for(JugadorScoreRequestDto j : partidaRequestDto.getJugadores()){
+            //Consultar el jugador
+            Jugador jugador = this.jugadorService.getJugadorEntity(j.getId());
+            
+            //Mapea el request para crear la entidad JugadorPartida
+		    JugadorPartida jugadorPartida = this.partidaMapper.toJugadorPartidaEntity(partida,jugador,j);
+			
+		    //Guarda la relación de jugador con partida en la base de datos 
+		    JugadorPartida jugadorPartidaSaved = this.jugadorPartidaRepository.save(jugadorPartida);
+            
+            //Se le agrega a la lista
+            jugadoresPartida.add(jugadorPartidaSaved);
+        }
+        
+        //retorna la relacion jugador-partida
+		return this.partidaMapper.toResponse(partidaSaved, jugadoresPartida);
 	}
 	
 	// listar partidas
 	public List<PartidaResponseDto> listarPartidas(){
-		List<JugadorPartida> jugadoresPartidas = this.jugadorPartidaRepository.findAll();
+		List<Partida> partidas = this.partidaRepository.findAll();
+
+        List<List<JugadorPartida>> listJugadoresPartidas = new ArrayList<>();
+        
+        for(Partida p : partidas){
+            List<JugadorPartida> jugadoresPartida = this.jugadorPartidaRepository.findByPartidaId(p.getId())
+                .orElseThrow(() -> new EntityNotFoundException("No existe la relación de partida con id "+p.getId()+" con la entidad jugador"));
+            listJugadoresPartidas.add(jugadoresPartida);
+        } 
+        
 		
-		return this.partidaMapper.toListResponse(jugadoresPartidas);
+		return this.partidaMapper.toListResponse(partidas, listJugadoresPartidas);
 	}
 }

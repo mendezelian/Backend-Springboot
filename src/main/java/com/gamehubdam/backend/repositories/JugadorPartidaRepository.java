@@ -2,9 +2,11 @@ package com.gamehubdam.backend.repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import com.gamehubdam.backend.entities.JugadorPartida;
-import com.gamehubdam.backend.dtos.RankingResponseDto;
+import com.gamehubdam.backend.dtos.RankingQueryDto;
 import org.springframework.data.jpa.repository.Query;
 import java.util.List;
+import java.util.Optional;
+import com.gamehubdam.backend.dtos.JugadorConScoreResponseDto;
 
 // Se hace una interfaz para que pueda extender a JpaRepository, permitiendo así que springboot
 // genere automaticamente las clases de implementación de los métodos predefinidos en Jpa, quitando la necesidad de hacerlo manualmente
@@ -17,11 +19,22 @@ public interface JugadorPartidaRepository extends JpaRepository<JugadorPartida, 
 	// en diferentes partidas y retornar el ranking de mayor a menor score.
 
 	@Query("""
-		SELECT new com.gamehubdam.backend.dtos.RankingResponseDto(j.id,j.nombre, SUM(jp.score))
+		SELECT new com.gamehubdam.backend.dtos.RankingQueryDto(j.id,j.nombre, SUM(jp.score))
 		FROM JugadorPartida jp
 	       	JOIN jp.jugador j
 		GROUP BY j.id
 		ORDER BY SUM(jp.score) DESC	
 	""")
-	List<RankingResponseDto> obtenerRanking();
+	List<RankingQueryDto> obtenerRanking();
+    
+    Optional<List<JugadorPartida>> findByPartidaId(Long id); 
+    
+    @Query("""
+        SELECT new com.gamehubdam.backend.dtos.JugadorConScoreResponseDto(j.id,j.nombre, SUM(jp.score))
+        FROM JugadorPartida jp
+            JOIN jp.jugador j
+        WHERE j.id = :id
+        GROUP BY j.id
+    """)
+    Optional<JugadorConScoreResponseDto> findJugadorConScoreById(Long id);
 }

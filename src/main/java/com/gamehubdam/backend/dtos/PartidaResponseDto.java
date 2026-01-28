@@ -4,16 +4,15 @@ import lombok.Getter;
 import lombok.AllArgsConstructor;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import com.gamehubdam.backend.dtos.JugadorPartidaResponseDto;
+import com.gamehubdam.backend.entities.Partida;
+import java.util.List;
 
-// Dto de respuesta al cliente, inmutable solo se puede consulat y crear mediante el constructor
+// Dto de respuesta al cliente, inmutable solo se puede consular y crear mediante el constructor
 
 @AllArgsConstructor // Constructor con todas las propiedades
 @Getter // Métodos Getter para todas las propiedades
 public class PartidaResponseDto{
-	private Long partidaId;
-	private Long jugadorId;
-	private String nombre;
-	private int score;
-	private LocalDate fecha;
-	private LocalTime duracion;
+	private Partida partida;
+	private List<JugadorPartidaResponseDto> jugadores;
 }

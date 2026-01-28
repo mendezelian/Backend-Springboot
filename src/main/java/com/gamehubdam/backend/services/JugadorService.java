@@ -10,13 +10,16 @@ import com.gamehubdam.backend.mappers.JugadorMapper;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
 import com.gamehubdam.backend.dtos.JugadorLoginRequestDto;
+import com.gamehubdam.backend.repositories.JugadorPartidaRepository;
+import com.gamehubdam.backend.dtos.JugadorConScoreResponseDto;
 
 @RequiredArgsConstructor // Obliga a spring que inyecte las clases mediante su constructor, alternativa al autowired
 @Service
 public class JugadorService{
 	private final JugadorRepository jugadorRepository; // Inyecta JugadorRepository
 	private final JugadorMapper jugadorMapper; // Inyecta JugadorMapper
-	
+	private final JugadorPartidaRepository jugadorPartidaRepository;
+
 	// crear un jugador
 	public JugadorResponseDto crearJugador(JugadorRequestDto jugadorRequestDto){
 		Jugador jugador = this.jugadorMapper.toEntity(jugadorRequestDto); // mapea el dto a la entidad 'Jugador'
@@ -46,6 +49,18 @@ public class JugadorService{
     }
     
     // Consultar jugador por id
+    public JugadorResponseDto buscarJugadorPorId(Long id){
+        Jugador jugador = this.jugadorRepository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException("El jugador con id "+id+" no existe."));
+        return this.jugadorMapper.toResponse(jugador);
+    }
+    // Consultar jugador con puntos acumulados
+    public JugadorConScoreResponseDto buscarJugadorConScorePorId(Long id){
+        return this.jugadorPartidaRepository.findJugadorConScoreById(id)
+            .orElseThrow(() -> new EntityNotFoundException("El jugador con id "+id+" no existe."));
+    }
+
+    // Consultar ju entidad jugador por id
 	public Jugador getJugadorEntity(Long id){
 		
 		Jugador jugador = this.jugadorRepository.findById(id)

@@ -31,7 +31,8 @@ public class PartidaController{
 			Map<String, String> messageError = new HashMap<>();
 			messageError.put("error",String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.value()));
 			messageError.put("message","Error interno del servidor.");
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(messageError);
+			System.out.println("***************** Error: "+e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(messageError);
 		}
 	}
 	

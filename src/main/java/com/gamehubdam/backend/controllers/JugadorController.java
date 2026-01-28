@@ -18,6 +18,8 @@ import com.gamehubdam.backend.dtos.JugadorResponseDto;
 import com.gamehubdam.backend.services.JugadorService;
 import com.gamehubdam.backend.dtos.JugadorLoginRequestDto;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.web.bind.annotation.PathVariable;
+import com.gamehubdam.backend.dtos.JugadorConScoreResponseDto;
 
 @RequiredArgsConstructor
 @RestController
@@ -76,4 +78,23 @@ public class JugadorController{
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(messageError);
 		}
 	}
+
+    @GetMapping("/{id}/score")
+    public ResponseEntity<?> buscarJugadorConPuntosAcumulados(@PathVariable Long id){
+        try{
+            JugadorConScoreResponseDto jugadorConScoreResponseDto = this.jugadorService.buscarJugadorConScorePorId(id);
+            return ResponseEntity.status(HttpStatus.OK).body(jugadorConScoreResponseDto);
+        }catch(EntityNotFoundException e){ // manejo de errores
+            Map<String, Object> messageError = new HashMap<>();
+            messageError.put("error",HttpStatus.NOT_FOUND);
+            messageError.put("message",e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(messageError);
+        }catch(Exception e){
+            Map<String, String> messageError = new HashMap<>();
+            messageError.put("error",String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.value()));
+            messageError.put("message","Error interno del servidor");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(messageError);
+        }
+
+    }
 }

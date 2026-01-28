@@ -3,14 +3,12 @@ package com.gamehubdam.backend.dtos;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import com.gamehubdam.backend.entities.Jugador;
+import com.gamehubdam.backend.entities.Partida;
 
-
-//DTO de respuesta para el cliente
 @AllArgsConstructor
 @Getter
-public class RankingResponseDto{
-    private Long jugadorId;
-    private String nombre; 
+public class JugadorPartidaResponseDto{
+    private Long id;
+    private String nombre;
     private Integer score;
-    private Integer puesto;
 }
