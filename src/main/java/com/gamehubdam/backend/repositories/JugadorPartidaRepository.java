@@ -27,14 +27,15 @@ public interface JugadorPartidaRepository extends JpaRepository<JugadorPartida, 
 	""")
 	List<RankingQueryDto> obtenerRanking();
     
-    Optional<List<JugadorPartida>> findByPartidaId(Long id); 
+    	Optional<List<JugadorPartida>> findByPartidaId(Long id); 
     
-    @Query("""
-        SELECT new com.gamehubdam.backend.dtos.JugadorConScoreResponseDto(j.id,j.nombre, SUM(jp.score))
-        FROM JugadorPartida jp
-            JOIN jp.jugador j
-        WHERE j.id = :id
-        GROUP BY j.id
-    """)
-    Optional<JugadorConScoreResponseDto> findJugadorConScoreById(Long id);
+    	// Al mappear el dto tomará solo los atributos que coincidan con la entidad asignada}
+    	@Query("""
+        	SELECT new com.gamehubdam.backend.dtos.JugadorConScoreResponseDto(j.id,j.nombre, COALESCE(SUM(jp.score), 0))
+        	FROM Jugador j
+        	LEFT JOIN JugadorPartida jp ON jp.jugador.id = j.id
+        	WHERE j.id = :id
+        	GROUP BY j.id
+    	""")
+    	Optional<JugadorConScoreResponseDto> findJugadorConScoreById(Long id);
 }
